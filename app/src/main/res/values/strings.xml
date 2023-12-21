@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Week TV Show App</string>
+    <string name="try_again_btn_text">Try Again</string>
+    <string name="error_no_internet">No Internet</string>
+    <string name="no_internet_on_splash">No, internet connection, please try again later.</string>
+    <string name="cant_see_details_without_internet_text">To see details, please check your internet connection and try again.</string>
+    <string name="no_results">No Results, please try again.</string>
+    <string name="tv_shows_title">Week TV Show App</string>
+    <string name="no_info_about_tv_show">Error!, no Information related to the Tv show.</string>
+</resources>
