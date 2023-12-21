@@ -8,7 +8,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.capitalize
@@ -16,7 +15,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.intl.Locale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
@@ -58,6 +56,7 @@ fun HomeScreen(
     }
 
     HomeScreen(
+        viewModel = viewModel,
         uiState = uiState,
         onCardClick = onCardClick,
         onRefresh = { viewModel.getTredingTvShows() },
@@ -69,26 +68,27 @@ fun HomeScreen(
 
 @Composable
 fun HomeScreen(
+    viewModel: HomeScreenViewModel,
     uiState: UiState?,
     onCardClick: (Int) -> Unit,
     onRefresh: () -> Unit,
     onCache: (TvShow) -> Unit
 ) {
+
+    val windowSize = rememberWindowSize()
+    val searchAppBarState: SearchAppBarState by viewModel.searchAppBarState
+    val searchTextState: String by viewModel.searchTextState
     Scaffold(
-        topBar = {
-            TopAppBar(
-                title = {
-                    Text(text = LocalContext.current.getString(R.string.app_name))
-                },
-                backgroundColor = MaterialTheme.colors.primary,
-                contentColor = Color.White,
-                elevation = 10.dp
-            )
-        }
+        topBar = { CustomTopAppBar(
+            viewModel = viewModel,
+            searchAppBarState = searchAppBarState,
+            searchTextState = searchTextState
+        ) }
     ) { paddingValues ->
         Column(modifier = Modifier.padding(paddingValues)) {
             ListAndFilter(
                 uiState,
+                windowSize,
                 onCardClick,
                 onRefresh,
                 onCache
@@ -100,6 +100,7 @@ fun HomeScreen(
 @Composable
 private fun ListAndFilter(
     uiState: UiState?,
+    windowSizeClass: WindowSizeClass,
     onCardClick: (Int) -> Unit,
     onRefresh: () -> Unit,
     onCache: (TvShow) -> Unit

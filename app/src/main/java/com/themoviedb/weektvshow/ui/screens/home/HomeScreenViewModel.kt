@@ -1,11 +1,14 @@
 package com.themoviedb.weektvshow.ui.screens.home
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.themoviedb.weektvshow.data.network.models.tvshows.TvShow
 import com.themoviedb.weektvshow.data.source.TvShowsRepository
+import com.themoviedb.weektvshow.ui.shared.SearchAppBarState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,13 +24,26 @@ class HomeScreenViewModel @Inject constructor(
 ) : ViewModel() {
     private val _tvShows = MutableStateFlow<PagingData<TvShow>>(PagingData.empty())
     val tvShows = _tvShows.asStateFlow()
-      init {
+    val searchAppBarState: MutableState<SearchAppBarState> =
+        mutableStateOf(SearchAppBarState.CLOSED)
+
+    val searchTextState: MutableState<String> =
+        mutableStateOf("")
+    init {
         getTredingTvShows()
     }
 
 
     fun getTredingTvShows() = viewModelScope.launch {
         repository.getTrendingTvShows()
+            .cachedIn(viewModelScope)
+            .collectLatest { tvShows ->
+                _tvShows.update { tvShows }
+            }
+    }
+
+    fun getSearchQueryTVShows(searchQuery:String)  = viewModelScope.launch {
+        repository.getSearchQueryTVShows(searchQuery)
             .cachedIn(viewModelScope)
             .collectLatest { tvShows ->
                 _tvShows.update { tvShows }

@@ -32,9 +32,9 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.SubcomposeAsyncImage
 import coil.request.ImageRequest
 import com.themoviedb.weektvshow.R
+import com.themoviedb.weektvshow.data.network.models.tvshows.TvShow
 import com.themoviedb.weektvshow.data.network.models.tvshowdetails.ShortSeason
 import com.themoviedb.weektvshow.data.network.models.tvshowdetails.TvShowDetails
-import com.themoviedb.weektvshow.data.network.models.tvshows.TvShow
 import com.themoviedb.weektvshow.data.room.entities.FavoriteTvShow
 import com.themoviedb.weektvshow.ui.shared.*
 import com.themoviedb.weektvshow.ui.theme.dimen
@@ -547,7 +547,7 @@ fun SimilarShowsSection(viewModel: DetailsScreenViewModel, onCardClick: (Int) ->
     Box {
         LazyRow(
             content = {
-                tvShows.forEach { tvshow ->
+                tvShows?.forEach { tvshow ->
                     item {
                         SimilarCard(
                             tvShow = tvshow,

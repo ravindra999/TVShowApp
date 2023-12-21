@@ -9,6 +9,7 @@ import javax.inject.Inject
 
 interface TvShowsRemoteDataSource {
     suspend fun getTrendingTvShows(): Result<TvShowsResponse, ErrorResponse>
+    suspend fun getSearchQueryTVShows(searchQuery:String): Result<TvShowsResponse, ErrorResponse>
 }
 
 class TvShowsRemoteDataSourceImp @Inject constructor(
@@ -19,4 +20,7 @@ class TvShowsRemoteDataSourceImp @Inject constructor(
         apiService.getTrendingTvShows()
     }
 
+    override suspend fun getSearchQueryTVShows(searchQuery: String)= mapResponse {
+        apiService.getSearchQueryTVShows(searchQuery)
+    }
 }

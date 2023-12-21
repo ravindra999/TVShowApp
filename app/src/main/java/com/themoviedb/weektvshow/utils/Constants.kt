@@ -9,4 +9,6 @@ object Constants {
 
     //NAVIGATION ARGUMENT KEYS
     const val TV_SHOW_ID_ARGUMENT = "detailsId"
+    val TRENDING_PAGE_SOURCE = 1
+    val SEARCH_PAGE_SOURCE = 2
 }

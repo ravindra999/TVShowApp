@@ -2,8 +2,8 @@ package com.themoviedb.weektvshow.data.source
 
 import com.themoviedb.weektvshow.data.Result
 import com.themoviedb.weektvshow.data.network.models.ErrorResponse
-import com.themoviedb.weektvshow.data.network.models.tvshowdetails.TvShowDetails
 import com.themoviedb.weektvshow.data.network.models.tvshows.TvShowsResponse
+import com.themoviedb.weektvshow.data.network.models.tvshowdetails.TvShowDetails
 import com.themoviedb.weektvshow.data.room.entities.FavoriteTvShow
 import com.themoviedb.weektvshow.data.source.local.TvShowDetailsLocalDataSource
 import com.themoviedb.weektvshow.data.source.remote.TvShowDetailsRemoteDataSource
