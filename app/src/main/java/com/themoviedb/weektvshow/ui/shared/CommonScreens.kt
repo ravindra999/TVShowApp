@@ -21,6 +21,34 @@ import kotlin.math.ceil
 import kotlin.math.floor
 
 @Composable
+fun <T> DetailsPageWithState(
+    uiState: UiState?,
+    modifier: Modifier = Modifier,
+    successBlock: @Composable (T) -> Unit,
+) {
+    Box(
+        modifier = modifier.fillMaxSize()
+    ) {
+        when (uiState) {
+            UiState.Loading -> {
+                LoadingScreen(modifier = Modifier.background(MaterialTheme.colors.surface))
+            }
+            is UiState.Error -> {
+                ErrorScreen(
+                    errorMessage = uiState.errorMessage,
+                    errorStringResource = uiState.errorStringResource
+                )
+            }
+            is UiState.Success<*> -> {
+                @Suppress("UNCHECKED_CAST")
+                successBlock(uiState.data as T)
+            }
+            else -> {}
+        }
+    }
+}
+
+@Composable
 fun <T> PageWithState(
     uiState: UiState?,
     successBlock: @Composable (T) -> Unit
@@ -47,6 +75,75 @@ fun <T> PageWithState(
         }
     }
 }
+
+/*
+* Widget based on Angelo Rüggeber rating bar widget
+* Source: https://www.jetpackcompose.app/snippets/RatingBar
+* Author: Angelo Rüggeber modified by Luis Enrique Ramirez
+ */
+@Composable
+fun RatingBar(
+    modifier: Modifier = Modifier,
+    rating: Double = 0.0,
+    stars: Int = 5,
+    starsColor: Color,
+) {
+
+    val filledStars = floor(rating).toInt()
+    val unfilledStars = (stars - ceil(rating)).toInt()
+    val halfStar = !(rating.rem(1).equals(0.0))
+
+    Row {
+        repeat(filledStars) {
+            Icon(
+                modifier = modifier,
+                imageVector = Icons.Outlined.Star,
+                contentDescription = null,
+                tint = starsColor
+            )
+        }
+
+        if (halfStar) {
+            Icon(
+                modifier = modifier,
+                imageVector = Icons.Outlined.StarHalf,
+                contentDescription = null,
+                tint = starsColor
+            )
+        }
+
+        repeat(unfilledStars) {
+            Icon(
+                modifier = modifier,
+                imageVector = Icons.Outlined.StarOutline,
+                contentDescription = null,
+                tint = starsColor
+            )
+        }
+    }
+}
+
+@Composable
+fun BackButtonBar(
+    modifier: Modifier = Modifier,
+    onBackPressed: () -> Unit
+) {
+    Box(
+        modifier = Modifier
+            .background(Color.Transparent),
+        contentAlignment = Alignment.TopStart
+    ) {
+        IconButton(onClick = onBackPressed) {
+            Icon(
+                modifier = modifier,
+                imageVector = Icons.Default.ArrowBack,
+                tint = Color.White,
+                contentDescription = null
+            )
+        }
+    }
+}
+
 @Composable
 fun ScreenWithMessage(
     modifier: Modifier = Modifier,

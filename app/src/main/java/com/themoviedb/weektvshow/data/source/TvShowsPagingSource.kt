@@ -5,7 +5,6 @@ import androidx.paging.PagingState
 import com.themoviedb.weektvshow.data.Result
 import com.themoviedb.weektvshow.data.network.models.tvshows.TvShow
 import com.themoviedb.weektvshow.data.source.remote.TvShowsRemoteDataSource
-import com.themoviedb.weektvshow.utils.Constants
 
 class TvShowsPagingSource(private val dataSource: TvShowsRemoteDataSource) : PagingSource<Int, TvShow>() {
     companion object {

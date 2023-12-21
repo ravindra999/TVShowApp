@@ -1,7 +1,5 @@
 package com.themoviedb.weektvshow.ui.screens.home
 
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
@@ -23,7 +21,7 @@ class HomeScreenViewModel @Inject constructor(
 ) : ViewModel() {
     private val _tvShows = MutableStateFlow<PagingData<TvShow>>(PagingData.empty())
     val tvShows = _tvShows.asStateFlow()
-    init {
+      init {
         getTredingTvShows()
     }
 
@@ -35,7 +33,6 @@ class HomeScreenViewModel @Inject constructor(
                 _tvShows.update { tvShows }
             }
     }
-
 
     fun getLocalListOfTvShows() = viewModelScope.launch {
 

@@ -2,6 +2,7 @@ package com.themoviedb.weektvshow.data.network
 
 import com.themoviedb.weektvshow.BuildConfig
 import com.themoviedb.weektvshow.data.network.models.ErrorResponse
+import com.themoviedb.weektvshow.data.network.models.tvshowdetails.TvShowDetails
 import com.themoviedb.weektvshow.data.network.models.tvshows.TvShowsResponse
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -15,4 +16,19 @@ interface TVShowApiService {
         @Query("api_key") apiKey: String = BuildConfig.API_KEY
     ): NetworkResponse<TvShowsResponse, ErrorResponse>
 
+
+
+    //similar tv shows api call
+    @GET("tv/{id}/similar")
+    suspend fun getSimilarTVShowsById(
+        @Path("id") id: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): NetworkResponse<TvShowsResponse, ErrorResponse>
+
+    //tv show details api call
+    @GET("tv/{id}")
+    suspend fun getTVShowById(
+        @Path("id") id: Int,
+        @Query("api_key") apiKey: String = BuildConfig.API_KEY
+    ): NetworkResponse<TvShowDetails, ErrorResponse>
 }

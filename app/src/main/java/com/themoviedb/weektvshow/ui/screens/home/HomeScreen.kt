@@ -1,5 +1,6 @@
 package com.themoviedb.weektvshow.ui.screens.home
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -34,7 +35,8 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeScreenViewModel = hiltViewModel()
+    viewModel: HomeScreenViewModel = hiltViewModel(),
+    onCardClick: (Int) -> Unit
 ) {
     val tvShows = viewModel.tvShows.collectAsLazyPagingItems()
     val netWorkStatus = getNetworkStatus()
@@ -57,6 +59,7 @@ fun HomeScreen(
 
     HomeScreen(
         uiState = uiState,
+        onCardClick = onCardClick,
         onRefresh = { viewModel.getTredingTvShows() },
         onCache = {
             viewModel.cacheTvShows(it)
@@ -65,7 +68,9 @@ fun HomeScreen(
 }
 
 @Composable
-fun HomeScreen(uiState: UiState?,
+fun HomeScreen(
+    uiState: UiState?,
+    onCardClick: (Int) -> Unit,
     onRefresh: () -> Unit,
     onCache: (TvShow) -> Unit
 ) {
@@ -84,6 +89,7 @@ fun HomeScreen(uiState: UiState?,
         Column(modifier = Modifier.padding(paddingValues)) {
             ListAndFilter(
                 uiState,
+                onCardClick,
                 onRefresh,
                 onCache
             )
@@ -94,6 +100,7 @@ fun HomeScreen(uiState: UiState?,
 @Composable
 private fun ListAndFilter(
     uiState: UiState?,
+    onCardClick: (Int) -> Unit,
     onRefresh: () -> Unit,
     onCache: (TvShow) -> Unit
 ) {
@@ -102,7 +109,8 @@ private fun ListAndFilter(
         HomeScreenContent(
             uiState = uiState,
             onRefresh = onRefresh,
-            onCache = onCache
+            onCache = onCache,
+            onCardClick = onCardClick
         )
     }
 }
@@ -110,6 +118,7 @@ private fun ListAndFilter(
 @Composable
 private fun HomeScreenContent(
     uiState: UiState?,
+    onCardClick: (Int) -> Unit,
     onRefresh: () -> Unit,
     onCache: (TvShow) -> Unit
 ) {
@@ -119,7 +128,17 @@ private fun HomeScreenContent(
     PageWithState<LazyPagingItems<TvShow>>(
         uiState = uiState
     ) {
-        TvShowList(it, onRefresh, onCache)
+        TvShowList(it, onRefresh, onCache) { id ->
+            if (status) {
+                onCardClick(id)
+                return@TvShowList
+            }
+            Toast.makeText(
+                context,
+                context.getString(R.string.cant_see_details_without_internet_text),
+                Toast.LENGTH_LONG
+            ).show()
+        }
     }
 }
 
@@ -127,7 +146,8 @@ private fun HomeScreenContent(
 private fun TvShowList(
     tvShows: LazyPagingItems<TvShow>,
     onRefresh: () -> Unit,
-    onCache: (TvShow) -> Unit
+    onCache: (TvShow) -> Unit,
+    onCardClick: (Int) -> Unit
 ) {
 
     val windowSize = rememberWindowSize()
@@ -159,7 +179,7 @@ private fun TvShowList(
         ) {
             items(tvShows.itemCount) { i ->
                 onCache(tvShows[i]!!)
-                TvShowListItem(tvShow = tvShows[i]!!)
+                TvShowListItem(tvShow = tvShows[i]!!, onCardClick = onCardClick)
             }
         }
     }
@@ -169,7 +189,9 @@ private fun TvShowList(
 @Composable
 private fun TvShowListItem(
     modifier: Modifier = Modifier,
-    tvShow: TvShow) {
+    tvShow: TvShow,
+    onCardClick: (Int) -> Unit
+) {
 
     val windowSize = rememberWindowSize()
     val paddingValue = MaterialTheme.dimen.small
@@ -179,7 +201,8 @@ private fun TvShowListItem(
             .padding(paddingValue)
             .wrapContentSize(align = Alignment.Center),
         shape = RoundedCornerShape(MaterialTheme.dimen.borderRounded),
-        elevation = MaterialTheme.dimen.elevationNormal
+        elevation = MaterialTheme.dimen.elevationNormal,
+        onClick = { onCardClick(tvShow.id) }
     ) {
         Column {
             tvShow.poster_path?.let { ImageSection(imageUrl = it) }

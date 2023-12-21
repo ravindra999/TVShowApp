@@ -10,6 +10,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.themoviedb.weektvshow.ui.screens.details.DetailsScreen
 import com.themoviedb.weektvshow.ui.screens.home.HomeScreen
 
 @Composable
@@ -24,7 +25,18 @@ fun MainNavigation(
         startDestination = NavItem.Home.baseRoute
     ) {
         composable(NavItem.Home) {
-            HomeScreen()
+            HomeScreen(
+                onCardClick = { navController.safeNavigate(NavItem.Details.createRoute(it)) }
+            )
+        }
+        composable(NavItem.Details) {
+            DetailsScreen(onBackPressed = {
+                navController.popBackStack()
+            },
+                onCardClick = {
+                    navController.navigateUp()
+                    navController.safeNavigate(NavItem.Details.createRoute(it))
+                })
         }
     }
 }

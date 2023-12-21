@@ -18,4 +18,5 @@ class TvShowsRemoteDataSourceImp @Inject constructor(
     override suspend fun getTrendingTvShows() = mapResponse {
         apiService.getTrendingTvShows()
     }
+
 }
